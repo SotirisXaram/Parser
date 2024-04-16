@@ -1,4 +1,14 @@
+{HELLO  A COMMENT}
 PROGRAM Sample1
-BODY
-WRITE("Hello World!")      
 
+
+VAR
+i, j: INTEGER;
+s1, s2: STRING;
+buffer: ARRAY[10] OF INTEGER;
+flag: BOOLEAN
+
+BODY
+BEGIN
+WRITE("Hello World!");     
+END;

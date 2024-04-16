@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package parser_ex4;
 
 import java.util.ArrayList;
@@ -17,6 +13,8 @@ public class Parser_ex4 {
         //System.out.format("%s %s %d\n",token.data,token.type,token.line);
         return token;
     }
+    
+    
 
     public static void error(String s) {
         System.out.format("error in line %d: %s\n", token.line, s);
@@ -52,6 +50,7 @@ public class Parser_ex4 {
         }
     }
 
+    
     //-------------------------------------------------------------------
     // declarations = VAR decl (SEMICOLON decl)* | ε
     //------------------------------------------------------------------- 
@@ -84,7 +83,9 @@ public class Parser_ex4 {
     //------------------------------------------------------------------- 
     public static void idList() {
         if(token.type.name().equals("identifierTK")){
+            
             token=next();
+            
             while(token.type.name().equals("commaTK")){
                 token=next();
                 if(token.type.name().equals("identifierTK")){
@@ -94,8 +95,9 @@ public class Parser_ex4 {
                     error("identifierTK must provide after comma");
                 }
             }
+            
         }else{
-            error("identifier must provide");
+            error("identifier must provide ");
         }
     }
 
@@ -190,74 +192,76 @@ public static void statement() {
             block();
             if (token.type.name().equals("endTK")) {
                 token = next(); // consume END
+                System.out.println("Parshed Succefull of begin end");
             } else {
                 error("END keyword expected after block");
             }
             break;
-        case "identifierTK":
-            lvalue();
-            if (token.type.name().equals("assignTK")) {
-                token = next(); // consume ASSIGN
-                expr();
-            } else {
-                error("Assignment operator expected after lvalue");
-            }
-            break;
-        case "readTK":
-            token = next(); // consume READ
-            if (token.type.name().equals("lparenTK")) {
-                token = next(); // consume LPAREN
-                idList();
-                if (token.type.name().equals("rparenTK")) {
-                    token = next(); // consume RPAREN
-                } else {
-                    error("RPAREN expected after idList");
-                }
-            } else {
-                error("LPAREN expected after READ");
-            }
-            break;
-        case "writeTK":
-            token = next(); // consume WRITE
-            if (token.type.name().equals("lparenTK")) {
-                token = next(); // consume LPAREN
-                exprList();
-                if (token.type.name().equals("rparenTK")) {
-                    token = next(); // consume RPAREN
-                } else {
-                    error("RPAREN expected after exprList");
-                }
-            } else {
-                error("LPAREN expected after WRITE");
-            }
-            break;
-        case "ifTK":
-            token = next(); // consume IF
-            expr();
-            if (token.type.name().equals("thenTK")) {
-                token = next(); // consume THEN
-                statement();
-                if (token.type.name().equals("elseTK")) {
-                    token = next(); // consume ELSE
-                    statement();
-                }
-            } else {
-                error("THEN keyword expected after IF expression");
-            }
-            break;
-        case "whileTK":
-            token = next(); // consume WHILE
-            expr();
-            if (token.type.name().equals("doTK")) {
-                token = next(); // consume DO
-                statement();
-            } else {
-                error("DO keyword expected after WHILE expression");
-            }
-            break;
-        case "exitTK":
-            token = next(); // consume EXIT
-            break;
+            
+//        case "identifierTK":
+//            lvalue();
+//            if (token.type.name().equals("assignTK")) {
+//                token = next(); // consume ASSIGN
+//                expr();
+//            } else {
+//                error("Assignment operator expected after lvalue");
+//            }
+//            break;
+//        case "readTK":
+//            token = next(); // consume READ
+//            if (token.type.name().equals("lparenTK")) {
+//                token = next(); // consume LPAREN
+//                idList();
+//                if (token.type.name().equals("rparenTK")) {
+//                    token = next(); // consume RPAREN
+//                } else {
+//                    error("RPAREN expected after idList");
+//                }
+//            } else {
+//                error("LPAREN expected after READ");
+//            }
+//            break;
+//        case "writeTK":
+//            token = next(); // consume WRITE
+//            if (token.type.name().equals("lparenTK")) {
+//                token = next(); // consume LPAREN
+//                exprList();
+//                if (token.type.name().equals("rparenTK")) {
+//                    token = next(); // consume RPAREN
+//                } else {
+//                    error("RPAREN expected after exprList");
+//                }
+//            } else {
+//                error("LPAREN expected after WRITE");
+//            }
+//            break;
+//        case "ifTK":
+//            token = next(); // consume IF
+//            expr();
+//            if (token.type.name().equals("thenTK")) {
+//                token = next(); // consume THEN
+//                statement();
+//                if (token.type.name().equals("elseTK")) {
+//                    token = next(); // consume ELSE
+//                    statement();
+//                }
+//            } else {
+//                error("THEN keyword expected after IF expression");
+//            }
+//            break;
+//        case "whileTK":
+//            token = next(); // consume WHILE
+//            expr();
+//            if (token.type.name().equals("doTK")) {
+//                token = next(); // consume DO
+//                statement();
+//            } else {
+//                error("DO keyword expected after WHILE expression");
+//            }
+//            break;
+//        case "exitTK":
+//            token = next(); // consume EXIT
+//            break;
         default:
             error("Invalid statement");
             break;
@@ -268,12 +272,11 @@ public static void statement() {
 // block = statement (SEMICOLON statement)* | ε
 //------------------------------------------------------------------- 
 public static void block() {
-    while (!token.type.name().equals("endTK") && !token.type.name().equals("eofTK")) {
-        statement();
-        if (token.type.name().equals("semicolonTK")) {
-            token = next(); // consume SEMICOLON
-        }
-    }
+ statement();
+ while(token.type.name().equals("semicolonTK")){
+     token=next();
+     statement();
+ }
 }
 
     
@@ -318,105 +321,126 @@ public static void index() {
     //-------------------------------------------------------------------
     // exprList	= expr (COMMA expr)*
     //------------------------------------------------------------------- 
-    public static void exprList() {
-        expr();
-        while (token.type.name().equals("commaTK")) {
-            token = next();
-            expr();
-        }
-    }
-    
+
+
+
+//    public static void exprList() {
+//        expr();
+//        while (token.type.name().equals("commaTK")) {
+//            token = next();
+//            expr();
+//        }
+//    }
+//    
  //-------------------------------------------------------------------
-// expr = logicAND (OR logicAND)*
+// expr = logicAND (OR logicAND)*       NOT_MINE DELETE IT !!! @@@@@@@@
 //------------------------------------------------------------------- 
-public static void expr() {
-    logicAND();
-    while (token.type.name().equals("orTK")) {
-        token = next(); // consume OR
-        logicAND();
-    }
-}
+    
+    
+    
+//public static void expr() {
+//    logicAND();
+//    while (token.type.name().equals("orTK")) {
+//        token = next(); // consume OR
+//        logicAND();
+//    }
+//}
 
     
   //-------------------------------------------------------------------
-// logicAND	= relationExpr (AND relationExpr)*
+// logicAND	= relationExpr (AND relationExpr)*       NOT_MINE DELETE IT !!! @@@@@@@@
 //------------------------------------------------------------------- 
-public static void logicAND() {
-    relationExpr();
-    while (token.type.name().equals("andTK")) {
-        token = next(); // consume AND
-        relationExpr();
-    }
-}
+
+
+
+//public static void logicAND() {
+//    relationExpr();
+//    while (token.type.name().equals("andTK")) {
+//        token = next(); // consume AND
+//        relationExpr();
+//    }
+//}
 
     
    //-------------------------------------------------------------------
-// relationExpr = additiveExpr (relationOperator additiveExpr)?
+// relationExpr = additiveExpr (relationOperator additiveExpr)?   NOT_MINE DELETE IT !!! @@@@@@@@
 //------------------------------------------------------------------- 
-public static void relationExpr() {
-    additiveExpr();
-    if (relationOperator()) {
-        token = next(); // consume relational operator
-        additiveExpr();
-    }
-}
+
+
+
+
+
+
+
+//public static void relationExpr() {
+//    additiveExpr();
+//    if (relationOperator()) {
+//        token = next(); // consume relational operator
+//        additiveExpr();
+//    }
+//}
+
+
+
+
+
+
+
+  //-------------------------------------------------------------------
+// additiveExpr = term ((PLUS | MINUS) term)*    NOT_MINE DELETE IT !!! @@@@@@@@
+//------------------------------------------------------------------- 
+//public static void additiveExpr() {
+//    term();
+//    while (token.type.name().equals("plusTK") || token.type.name().equals("minusTK")) {
+//        token = next(); // consume PLUS or MINUS
+//        term();
+//    }
+//}
 
     
   //-------------------------------------------------------------------
-// additiveExpr = term ((PLUS | MINUS) term)*
+// factor =	...  NOT_MINE DELETE IT !!! @@@@@@@@
 //------------------------------------------------------------------- 
-public static void additiveExpr() {
-    term();
-    while (token.type.name().equals("plusTK") || token.type.name().equals("minusTK")) {
-        token = next(); // consume PLUS or MINUS
-        term();
-    }
-}
-
-    
-  //-------------------------------------------------------------------
-// factor =	...
-//------------------------------------------------------------------- 
-public static void factor() {
-    switch (token.type.name()) {
-        case "identifierTK":
-            lvalue();
-            break;
-        case "numericTK":
-        case "stringConstTK":
-        case "trueTK":
-        case "falseTK":
-            constant();
-            break;
-        case "minusTK":
-            token = next(); // consume MINUS
-            factor();
-            break;
-        case "lparenTK":
-            token = next(); // consume LPAREN
-            expr();
-            if (token.type.name().equals("rparenTK")) {
-                token = next(); // consume RPAREN
-            } else {
-                error("Missing closing parenthesis");
-            }
-            break;
-        default:
-            error("Invalid factor");
-            break;
-    }
-}
+//public static void factor() {
+//    switch (token.type.name()) {
+//        case "identifierTK":
+//            lvalue();
+//            break;
+//        case "numericTK":
+//        case "stringConstTK":
+//        case "trueTK":
+//        case "falseTK":
+//            constant();
+//            break;
+//        case "minusTK":
+//            token = next(); // consume MINUS
+//            factor();
+//            break;
+//        case "lparenTK":
+//            token = next(); // consume LPAREN
+//            expr();
+//            if (token.type.name().equals("rparenTK")) {
+//                token = next(); // consume RPAREN
+//            } else {
+//                error("Missing closing parenthesis");
+//            }
+//            break;
+//        default:
+//            error("Invalid factor");
+//            break;
+//    }
+//}
 
  //-------------------------------------------------------------------
-// term = factor ((TIMES | DIVISION | MODULO) factor)*
+// term = factor ((TIMES | DIVISION | MODULO) factor)* .  NOT_MINE DELETE IT !!! @@@@@@@@
 //------------------------------------------------------------------- 
-public static void term() {
-    factor();
-    while (token.type.name().equals("timesTK") || token.type.name().equals("divisionTK") || token.type.name().equals("moduloTK")) {
-        token = next(); // consume TIMES, DIVISION, or MODULO
-        factor();
-    }
-}
+//public static void term() {
+//    factor();
+//    while (token.type.name().equals("timesTK") || token.type.name().equals("divisionTK") || token.type.name().equals("moduloTK")) {
+//        token = next(); // consume TIMES, DIVISION, or MODULO
+//        factor();
+//    }
+//}
 
     //-------------------------------------------------------------------
 // constant = NUMERIC
@@ -425,27 +449,27 @@ public static void term() {
 //          | FALSE
 //          | MINUS NUMERIC
 //------------------------------------------------------------------- 
-public static void constant() {
-    switch (token.type.name()) {
-        case "numericTK":
-        case "stringConstTK":
-        case "trueTK":
-        case "falseTK":
-            token = next();
-            break;
-        case "minusTK":
-            token = next(); // consume MINUS
-            if (token.type.name().equals("numericTK")) {
-                token = next(); // consume NUMERIC
-            } else {
-                error("Numeric constant expected after MINUS");
-            }
-            break;
-        default:
-            error("Invalid constant");
-            break;
-    }
-}
+//public static void constant() {
+//    switch (token.type.name()) {
+//        case "numericTK":
+//        case "stringConstTK":
+//        case "trueTK":
+//        case "falseTK":
+//            token = next();
+//            break;
+//        case "minusTK":
+//            token = next(); // consume MINUS
+//            if (token.type.name().equals("numericTK")) {
+//                token = next(); // consume NUMERIC
+//            } else {
+//                error("Numeric constant expected after MINUS");
+//            }
+//            break;
+//        default:
+//            error("Invalid constant");
+//            break;
+//    }
+//}
 
 //-------------------------------------------------------------------
 // relationOperator = EQUAL
@@ -455,23 +479,23 @@ public static void constant() {
 //                  | LTE
 //                  | GTE
 //------------------------------------------------------------------- 
-public static void relationOperator() {
-    switch (token.type.name()) {
-        case "equalTK":
-        case "notEqualTK":
-        case "ltTK":
-        case "gtTK":
-        case "lteTK":
-        case "gteTK":
-            
-            token = next(); // Consume the relation operator
-            break;
-            
-        default:
-            error("Expected a relation operator");
-            break;
-    }
-}
+//public static void relationOperator() {
+//    switch (token.type.name()) {
+//        case "equalTK":
+//        case "notEqualTK":
+//        case "ltTK":
+//        case "gtTK":
+//        case "lteTK":
+//        case "gteTK":
+//            
+//            token = next(); // Consume the relation operator
+//            break;
+//            
+//        default:
+//            error("Expected a relation operator");
+//            break;
+//    }
+//}
 
 
 //-------------------------------------------------------------------
@@ -479,42 +503,42 @@ public static void relationOperator() {
 //                  | MINUS
 //                  | CONCAT
 //------------------------------------------------------------------- 
-public static void addingOperator() {
-    switch (token.type.name()) {
-        case "plusTK":
-        case "minusTK":
-        case "concatTK":
-            token = next(); // consume the adding operator
-            break;
-        default:
-            error("Invalid adding operator");
-            break;
-    }
-}
+//public static void addingOperator() {
+//    switch (token.type.name()) {
+//        case "plusTK":
+//        case "minusTK":
+//        case "concatTK":
+//            token = next(); // consume the adding operator
+//            break;
+//        default:
+//            error("Invalid adding operator");
+//            break;
+//    }
+//}
 
 //-------------------------------------------------------------------
 // multiplyOperator = TIMES
 //                  | DIVISION
 //                  | MODULO
 //------------------------------------------------------------------- 
-public static void multiplyOperator() {
-    switch (token.type.name()) {
-        case "timesTK":
-        case "divisionTK":
-        case "moduloTK":
-            token = next(); // consume the multiply operator
-            break;
-        default:
-            error("Invalid multiply operator");
-            break;
-    }
-}
+//public static void multiplyOperator() {
+//    switch (token.type.name()) {
+//        case "timesTK":
+//        case "divisionTK":
+//        case "moduloTK":
+//            token = next(); // consume the multiply operator
+//            break;
+//        default:
+//            error("Invalid multiply operator");
+//            break;
+//    }
+//}
 
     
     public static void main(String args[]) {
 
         // path to the input file
-        Lex lex = new Lex("./test/sample3.spl");
+        Lex lex = new Lex("./test/sample1.spl");
         tokens = lex.getTokens();
 
         token = next();
