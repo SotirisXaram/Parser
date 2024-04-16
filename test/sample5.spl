@@ -1,0 +1,44 @@
+{ Random Statements }
+
+PROGRAM Sample5
+VAR
+   x, y, i, j, l, m, r : INTEGER
+BODY BEGIN
+   WRITE("Enter two numbers in ascending order: ");
+   READ(i,j);
+   b := i < j;
+   WRITE(NOT b);
+   WRITE(s1|s2);
+   
+   x := 5 + x    ;
+   READ(x, y)  ;
+   WRITE(l, r)  ;
+   
+   BEGIN { An empty BLOCK } END ;
+   
+   BEGIN x := 5 END ;
+   BEGIN x := 5; WRITE(j) END ;
+   
+   IF x = 0 THEN BEGIN
+      WRITE("Divide by zero!!!");
+      EXIT
+   END ;
+   { Binary search }
+   IF      x < y THEN l := m+1         
+   ELSE IF x > y THEN r := m
+   ELSE 
+   BEGIN 
+      WRITE("Answer is ", m);
+      EXIT
+   END ;
+
+   WHILE n < m DO n := n * 2 ;
+
+   WHILE n > 0 DO 
+   BEGIN 
+      a := a * n;
+      n := n - 1
+   END
+END
+
+

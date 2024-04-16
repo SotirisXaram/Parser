@@ -1,0 +1,15 @@
+{ This sample prints prime numbers }
+PROGRAM Sample3
+VAR
+  i, j, div: INTEGER
+BODY BEGIN
+  i := 2;
+  WHILE TRUE DO 
+  BEGIN
+    div := 2;
+    WHILE i%div <> 0 DO 
+        div := div + 1;
+    IF i = div THEN WRITE(i, " , ");
+    i := i+1
+  END
+END

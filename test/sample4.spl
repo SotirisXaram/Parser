@@ -1,0 +1,15 @@
+{This sample calculates factorials }
+PROGRAM Sample4
+VAR
+   i, ans: INTEGER
+BODY BEGIN
+   READ(i);
+   ans := 1; 
+   WHILE i > 0 DO 
+   BEGIN
+      ans := ans * i;
+      i := i - 1
+   END;
+   WRITE(ans)
+END
+

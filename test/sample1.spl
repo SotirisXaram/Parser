@@ -1,0 +1,4 @@
+PROGRAM Sample1
+BODY
+WRITE("Hello World!")      
+

@@ -1,0 +1,21 @@
+{ Comments are single line only }
+{ This sample examines simple declarations and definitions }   
+PROGRAM Sample2 
+VAR
+   x,i : INTEGER ;
+   b : BOOLEAN ;
+   s : STRING ;
+   buffer : ARRAY[10] OF INTEGER ; 
+   _Name : STRING
+BODY BEGIN
+   x := 5 ;
+   x := -37 ;
+   b := TRUE ;
+   b := FALSE ;
+   s := "The man was saying, \"Are you talking to me?\" while he was gazing in the mirror.";
+   buffer[0] := x+10;
+   buffer[x] := x-10;
+   buffer[i] := x-i
+END
+
+
