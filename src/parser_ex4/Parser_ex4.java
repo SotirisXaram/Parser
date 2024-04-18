@@ -14,59 +14,62 @@ public class Parser_ex4 {
         return token;
     }
     
-    
 
     public static void error(String s) {
         System.out.format("error in line %d: %s\n", token.line, s);
         System.exit(0);
     }
-
+    
+    //NEW SOTIRIS CHARAMIDIS VERSION
+    
     //-------------------------------------------------------------------
-    // program = PROGRAM ID declarations BODY statement EOF -CHECKED!!
+    // program = PROGRAM ID declarations BODY statement EOF 
     //------------------------------------------------------------------- 
     public static void program() {
-        if(token.type.name().equals("programTK")){
-            token=next();
-            if(token.type.name().equals("identifierTK")){
+       if(token.type.name().equals("programTK")){
+           token=next();
+           if(token.type.name().equals("identifierTK")){
                 token=next();
                 declarations();
                 if(token.type.name().equals("bodyTK")){
                     token=next();
-                    statement();
-                    if(token.type.name().equals("eofTK")){
-                        token=next();
-                        System.out.println("Parsed succesfull");
-                    }else{
-                        error("EOF must provided");
-                    }
+                     statement();
+                     if(token.type.name().equals("eofTK")){
+                         System.out.println("Syntactically correct program");
+                     }
+                     
                 }else{
-                    error("Body missing");
+                    error("BODY MISSING");
                 }
-            }else{
-                error("Identifier must provide after the PROGRAM");
-            }
-        }else{
-            error("MUST CONTAIN PROGRAM KEYWORD");
-        }
+
+           }else{
+               error("ID after program must provide");
+           }
+          
+       }else{
+           error("Program token must provide");
+       }
+       
     }
 
     
     //-------------------------------------------------------------------
-    // declarations = VAR decl (SEMICOLON decl)* | ε -CHECKED
+    // declarations = VAR decl (SEMICOLON decl)* | ε 
     //------------------------------------------------------------------- 
     public static void declarations() {
-        if(token.type.name().equals("varTK")){  
+        if(token.type.name().equals("varTK")){
             token=next();
             decl();
             while(token.type.name().equals("semicolonTK")){
                 token=next();
                 decl();
             }
+             
         }
     }
 
     //-------------------------------------------------------------------
-    // decl = idList COLON type -CHECKED
+    // decl = idList COLON type --EAP   X,A,Y:INTEGER
     //------------------------------------------------------------------- 
     public static void decl() {
         idList();
@@ -79,7 +82,7 @@ public class Parser_ex4 {
     }
 
     //-------------------------------------------------------------------
-    // idList =	ID (COMMA ID)*  -CHECKED
+    // idList =	ID (COMMA ID)*  -CHECKED    x,y,a
     //------------------------------------------------------------------- 
     public static void idList() {
         if(token.type.name().equals("identifierTK")){
@@ -102,7 +105,7 @@ public class Parser_ex4 {
     }
 
     //-------------------------------------------------------------------
-    // type = basicType | arrayType -CHECKED
+    // type = basicType | arrayType 
     //------------------------------------------------------------------- 
 
 public static void type() {
@@ -119,7 +122,7 @@ public static void type() {
 
 
     //-------------------------------------------------------------------
-    // basicType = INTEGER | BOOLEAN |STRING    -CHECKED
+    // basicType = INTEGER | BOOLEAN |STRING    
     //------------------------------------------------------------------- 
     public static void basicType() {
         switch (token.type.name()) {
@@ -143,7 +146,7 @@ public static void type() {
     }
 
     //-------------------------------------------------------------------
-    // arrayType = ARRAY LBRACK NUMERIC RBRACK OF basicType -CHECKED
+    // arrayType = ARRAY LBRACK NUMERIC RBRACK OF basicType 
     //------------------------------------------------------------------- 
     public static void arrayType() {
         if (token.type.name().equals("arrayTK")) {
@@ -173,8 +176,8 @@ public static void type() {
             error("ARRAY keyword expected in array variable declaration");
         }
     }
-    //------+++++++++=EDW CUT +++++++++=---------------
-    
+  
+    //MEXRI EDW DOULEUEI
     
   //-------------------------------------------------------------------
 // statement = BEGIN block END
@@ -186,22 +189,28 @@ public static void type() {
 //          | EXIT
 //------------------------------------------------------------------- 
 public static void statement() {
+   
     switch (token.type.name()) {
+        
         case "beginTK":
-            token = next(); // consume BEGIN
+             
+            token = next(); 
+            
             block();
+            
             if (token.type.name().equals("endTK")) {
-                token = next(); // consume END
-                System.out.println("Parshed Succefull of begin end");
+                token = next(); 
+                
             } else {
                 error("END keyword expected after block");
             }
             break;
             
        case "identifierTK":
+           
            lvalue();
            if (token.type.name().equals("assignTK")) {
-               token = next(); // consume ASSIGN
+               token = next(); 
                expr();
            } else {
                error("Assignment operator expected after lvalue");
@@ -209,12 +218,12 @@ public static void statement() {
            break;
 
        case "readTK":
-           token = next(); // consume READ
+           token = next(); 
            if (token.type.name().equals("lparenTK")) {
-               token = next(); // consume LPAREN
+               token = next(); 
                idList();
                if (token.type.name().equals("rparenTK")) {
-                   token = next(); // consume RPAREN
+                   token = next(); 
                } else {
                    error(" ) expected after idList");
                }
@@ -223,12 +232,12 @@ public static void statement() {
            }
            break;
        case "writeTK":
-           token = next(); // consume WRITE
+           token = next(); 
            if (token.type.name().equals("lparenTK")) {
-               token = next(); // consume LPAREN
+               token = next(); 
                exprList();
                if (token.type.name().equals("rparenTK")) {
-                   token = next(); // consume RPAREN
+                   token = next(); 
                } else {
                    error(" ) expected after exprList");
                }
@@ -237,13 +246,13 @@ public static void statement() {
            }
            break;
        case "ifTK":
-           token = next(); // consume IF
+           token = next(); 
            expr();
            if (token.type.name().equals("thenTK")) {
-               token = next(); // consume THEN
+               token = next(); 
                statement();
                if (token.type.name().equals("elseTK")) {
-                   token = next(); // consume ELSE
+                   token = next(); 
                    statement();
                }
            } else {
@@ -251,23 +260,24 @@ public static void statement() {
            }
            break;
        case "whileTK":
-           token = next(); // consume WHILE
+           token = next();
            expr();
            if (token.type.name().equals("doTK")) {
-               token = next(); // consume DO
+               token = next(); 
                statement();
            } else {
                error("DO keyword expected after WHILE expression");
            }
            break;
        case "exitTK":
-           token = next(); // consume EXIT
+           token = next(); 
            break;
         default:
             error("Invalid statement");
             break;
     }
 }
+
 
   //-------------------------------------------------------------------
 // block = statement (SEMICOLON statement)* | ε
@@ -281,6 +291,7 @@ public static void block() {
         case "ifTK":
         case "whileTK":
         case "exitTK":
+      
             statement();
             while(token.type.name().equals("semicolonTK")){
                 token=next();
@@ -288,19 +299,22 @@ public static void block() {
             }
             break;
         default:
-            // Handle the epsilon
+            
             break;
     }
- 
 }
+
+
 
     
     //-------------------------------------------------------------------
-    // lvalue =	ID args -CHECKED
+    // lvalue =	ID args 
     //------------------------------------------------------------------- 
     public static void lvalue() {
         if (token.type.name().equals("identifierTK")) {
+           
             token = next();
+            
             args();
         } else {
             error("variable name expected");
@@ -308,14 +322,18 @@ public static void block() {
     }
     
     //-------------------------------------------------------------------
-    // args = LBRACK index RBRACK | ε   -CHECKED
+    // args = LBRACK index RBRACK | ε  
     //------------------------------------------------------------------- 
     public static void args() {
         if (token.type.name().equals("lbrackTK")) {
+           
             token = next();
+           
             index();
+           
             if (token.type.name().equals("rbrackTK")) {
                 token = next();
+               
             } else {
                 error("RBRACK expected in array variable reference");
             }
@@ -323,21 +341,21 @@ public static void block() {
     }
     
   //-------------------------------------------------------------------
-// index = ID | NUMERIC -CHECKED
+// index = ID | NUMERIC 
 //------------------------------------------------------------------- 
 public static void index() {
     if (token.type.name().equals("identifierTK") || token.type.name().equals("numericTK")) {
+        
         token = next(); // consume ID or NUMERIC
+      
     } else {
         error("ID or NUMERIC expected");
     }
 }
 
-    -------------------------------------------------------------------
-    exprList	= expr (COMMA expr)*    -CHECKED
-    ------------------------------------------------------------------- 
-
-
+//    -------------------------------------------------------------------
+//    exprList	= expr (COMMA expr)*  --eap  
+//    ------------------------------------------------------------------- 
 
    public static void exprList() {
        expr();
@@ -348,99 +366,106 @@ public static void index() {
    }
    
  //-------------------------------------------------------------------
-// expr = logicAND (OR logicAND)*       NOT_MINE DELETE IT !!! @@@@@@@@
+// expr = logicAND (OR logicAND)*       
 //------------------------------------------------------------------- 
     
    
-// public static void expr() {
-//     logicAND();
-//     while (token.type.name().equals("orTK")) {
-//         token = next(); // consume OR
-//         logicAND();
-//     }
-// }
+ public static void expr() {
+     logicAND();
+  
+     while (token.type.name().equals("orTK")) {
+         token = next(); // consume OR
+         logicAND();
+     }
+ }
 
 // //-------------------------------------------------------------------
 // // logicAND = relationExpr (AND relationExpr)*
 // //------------------------------------------------------------------- 
-// public static void logicAND() {
-//     relationExpr();
-//     while (token.type.name().equals("andTK")) {
-//         token = next(); // consume AND
-//         relationExpr();
-//     }
-// }
+ public static void logicAND() {
+     relationExpr();
+     while (token.type.name().equals("andTK")) {
+         token = next(); // consume AND
+         relationExpr();
+     }
+ }
 
 // //-------------------------------------------------------------------
 // // relationExpr = additiveExpr (relationOperator additiveExpr)?
 // //------------------------------------------------------------------- 
-// public static void relationExpr() {
-//     additiveExpr();
-//     if (isRelationOperator()) {
-//         token = next(); // consume relational operator
-//         additiveExpr();
-//     }
-// }
+public static void relationExpr() {
+    additiveExpr();
+    if (token.type.name().equals("equalTK") ||
+        token.type.name().equals("notEqualTK") ||
+        token.type.name().equals("ltTK") ||
+        token.type.name().equals("gtTK") ||
+        token.type.name().equals("lteTK") ||
+        token.type.name().equals("gteTK")) {
+        token = next(); // consume relational operator
+        additiveExpr();
+    }
+}
+
 
 // //-------------------------------------------------------------------
 // // additiveExpr = term ((PLUS | MINUS) term)*
 // //------------------------------------------------------------------- 
-// public static void additiveExpr() {
-//     term();
-//     while (token.type.name().equals("plusTK") || token.type.name().equals("minusTK")) {
-//         token = next(); // consume PLUS or MINUS
-//         term();
-//     }
-// }
+ public static void additiveExpr() {
+     term();
+     while (token.type.name().equals("plusTK") || token.type.name().equals("minusTK")) {
+         token = next(); // consume PLUS or MINUS
+         term();
+     }
+ }
 
 // //-------------------------------------------------------------------
 // // factor =	lvalue | constant | LPAREN expr RPAREN
 // //------------------------------------------------------------------- 
-// public static void factor() {
-//     switch (token.type.name()) {
-//         case "identifierTK":
-//             lvalue();
-//             break;
-//         case "numericTK":
-//         case "stringConstTK":
-//         case "trueTK":
-//         case "falseTK":
-//             constant();
-//             break;
-//         case "lparenTK":
-//             token = next(); // consume LPAREN
-//             expr();
-//             if (token.type.name().equals("rparenTK")) {
-//                 token = next(); // consume RPAREN
-//             } else {
-//                 error("Missing closing parenthesis");
-//             }
-//             break;
-//         default:
-//             error("Invalid factor");
-//             break;
-//     }
-// }
+ public static void factor() {
+     switch (token.type.name()) {
+         case "identifierTK":
+             lvalue();
+             break;
+         case "numericTK":
+         case "stringConstTK":
+         case "trueTK":
+         case "falseTK":
+             constant();
+             break;
+         case "lparenTK":
+             token = next(); // consume LPAREN
+             expr();
+             if (token.type.name().equals("rparenTK")) {
+                 token = next(); // consume RPAREN
+             } else {
+                 error("Missing closing parenthesis");
+             }
+             break;
+         default:
+             error("Invalid factor");
+             break;
+     }
+ }
 
 // //-------------------------------------------------------------------
 // // term = factor ((TIMES | DIVISION | MODULO) factor)*
 // //------------------------------------------------------------------- 
-// public static void term() {
-//     factor();
-//     while (token.type.name().equals("timesTK") || token.type.name().equals("divisionTK") || token.type.name().equals("moduloTK")) {
-//         token = next(); // consume TIMES, DIVISION, or MODULO
-//         factor();
-//     }
-// }
+ public static void term() {
+     factor();
+     while (token.type.name().equals("timesTK") || token.type.name().equals("divisionTK") || token.type.name().equals("moduloTK")) {
+         token = next(); // consume TIMES, DIVISION, or MODULO
+         factor();
+     }
+ }
 
 
-    -------------------------------------------------------------------
-constant = NUMERIC
-         | STRING
-         | TRUE         -CHECKED
-         | FALSE
-         | MINUS NUMERIC
-------------------------------------------------------------------- 
+//    -------------------------------------------------------------------
+//constant = NUMERIC
+//         | STRING
+//         | TRUE         
+//         | FALSE
+//         | MINUS NUMERIC
+//------------------------------------------------------------------- 
 public static void constant() {
    switch (token.type.name()) {
        case "numericTK":
@@ -450,9 +475,9 @@ public static void constant() {
            token = next();
            break;
        case "minusTK":
-           token = next(); // consume MINUS
+           token = next(); 
            if (token.type.name().equals("numericTK")) {
-               token = next(); // consume NUMERIC
+               token = next(); 
            } else {
                error("Numeric constant expected after MINUS");
            }
@@ -463,14 +488,14 @@ public static void constant() {
    }
 }
 
--------------------------------------------------------------------
-relationOperator = EQUAL
-                 | NOT_EQUAL
-                 | LT           -CHECKED
-                 | GT
-                 | LTE
-                 | GTE
-------------------------------------------------------------------- 
+//-------------------------------------------------------------------
+//relationOperator = EQUAL
+//                 | NOT_EQUAL
+//                 | LT           
+//                 | GT
+//                 | LTE
+//                 | GTE
+//------------------------------------------------------------------- 
 public static void relationOperator() {
    switch (token.type.name()) {
        case "equalTK":
@@ -480,7 +505,7 @@ public static void relationOperator() {
        case "lteTK":
        case "gteTK":
            
-           token = next(); // Consume the  operator
+           token = next(); 
            break;
            
        default:
@@ -490,17 +515,17 @@ public static void relationOperator() {
 }
 
 
--------------------------------------------------------------------
-addingOperator   = PLUS
-                 | MINUS    -CHECKED
-                 | CONCAT
-------------------------------------------------------------------- 
+//-------------------------------------------------------------------
+//addingOperator   = PLUS
+//                 | MINUS    
+//                 | CONCAT
+//------------------------------------------------------------------- 
 public static void addingOperator() {
    switch (token.type.name()) {
        case "plusTK":
        case "minusTK":
        case "concatTK":
-           token = next(); // consume the  operator
+           token = next(); 
            break;
        default:
            error("Invalid adding operator");
@@ -508,11 +533,11 @@ public static void addingOperator() {
    }
 }
 
--------------------------------------------------------------------
-multiplyOperator = TIMES
-                 | DIVISION         -CHECKED
-                 | MODULO
-------------------------------------------------------------------- 
+//-------------------------------------------------------------------
+//multiplyOperator = TIMES
+//                 | DIVISION        
+//                 | MODULO
+//------------------------------------------------------------------- 
 public static void multiplyOperator() {
    switch (token.type.name()) {
        case "timesTK":
@@ -526,14 +551,15 @@ public static void multiplyOperator() {
    }
 }
 
-    
+
     public static void main(String args[]) {
 
         // path to the input file
-        Lex lex = new Lex("./test/sample1.spl");
+        Lex lex = new Lex("./test/sample5.spl");
         tokens = lex.getTokens();
-
+        System.out.println(tokens);
         token = next();
+       
         program();
     }
 }
