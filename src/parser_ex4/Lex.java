@@ -57,11 +57,11 @@ public class Lex {
                             case "whitespaceTK":
                                 ;
                                 break;
+                            case "commentTK":
+                                ;
+                                break;
                             default:
-                            if(!token.type.name().equals("commentTK")){
                                 tokens.add(new Token(token , matcher.group(token.name()), lineCount));
-                            }
-                                
                                 break;
                         }
                 }
