@@ -1,4 +1,8 @@
-
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package parser_ex4;
 
 
@@ -9,16 +13,11 @@ public enum TokenType {
     whitespaceTK("[ \t\f\r]+"),
     newlineTK("\n"),
     commentTK("\\{[^{}\\n]*\\}"),
-  
-
-
 //-------------------------------------------------------------------
 // Constants
 //-------------------------------------------------------------------    
     numericTK("-?\\d+"),
     stringConstTK("\"([^\"\\\\\\n]|\\\\[\"\\\\])*\""),
-  //stringConstTK("\"(?:\\\\\"|\\\\\\\\|[^\"\\\\\\n])*\"")
-
 //-------------------------------------------------------------------
 // Keywords
 //-------------------------------------------------------------------
