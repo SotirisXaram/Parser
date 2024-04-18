@@ -58,7 +58,10 @@ public class Lex {
                                 ;
                                 break;
                             default:
+                            if(!token.type.name().equals("commentTK")){
                                 tokens.add(new Token(token , matcher.group(token.name()), lineCount));
+                            }
+                                
                                 break;
                         }
                 }
