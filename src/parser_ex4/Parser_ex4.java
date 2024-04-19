@@ -9,6 +9,7 @@ public class Parser_ex4 {
     static Token token;
 
     private static Token next() {
+        
         token = tokens.remove(0);
         //System.out.format("%s %s %d\n",token.data,token.type,token.line);
         return token;
@@ -20,7 +21,7 @@ public class Parser_ex4 {
         System.exit(0);
     }
     
-    //NEW SOTIRIS CHARAMIDIS VERSION
+   
     
     //-------------------------------------------------------------------
     // program = PROGRAM ID declarations BODY statement EOF 
@@ -36,6 +37,8 @@ public class Parser_ex4 {
                      statement();
                      if(token.type.name().equals("eofTK")){
                          System.out.println("Syntactically correct program");
+                     }else{
+                         System.out.println("EOF expected");
                      }
                      
                 }else{
@@ -177,7 +180,7 @@ public static void type() {
         }
     }
   
-    //MEXRI EDW DOULEUEI
+    
     
   //-------------------------------------------------------------------
 // statement = BEGIN block END
@@ -272,9 +275,7 @@ public static void statement() {
        case "exitTK":
            token = next(); 
            break;
-        default:
-            error("Invalid statement");
-            break;
+        
     }
 }
 
@@ -283,26 +284,13 @@ public static void statement() {
 // block = statement (SEMICOLON statement)* | ε
 //------------------------------------------------------------------- 
 public static void block() {
-    switch(token.type.name()){
-        case "identifierTK":
-        case "beginTK":
-        case "readTK":
-        case "writeTK":
-        case "ifTK":
-        case "whileTK":
-        case "exitTK":
-      
-            statement();
-            while(token.type.name().equals("semicolonTK")){
-                token=next();
-                statement();
-            }
-            break;
-        default:
-            
-            break;
+    statement();
+    while(token.type.name().equals("semicolonTK")){
+        token=next();
+        statement();
     }
 }
+
 
 
 
@@ -317,7 +305,7 @@ public static void block() {
             
             args();
         } else {
-            error("variable name expected");
+            error("variable name expected!!!");
         }
     }
     
@@ -345,9 +333,7 @@ public static void block() {
 //------------------------------------------------------------------- 
 public static void index() {
     if (token.type.name().equals("identifierTK") || token.type.name().equals("numericTK")) {
-        
-        token = next(); // consume ID or NUMERIC
-      
+        token = next(); 
     } else {
         error("ID or NUMERIC expected");
     }
@@ -374,7 +360,7 @@ public static void index() {
      logicAND();
   
      while (token.type.name().equals("orTK")) {
-         token = next(); // consume OR
+         token = next(); 
          logicAND();
      }
  }
@@ -385,7 +371,7 @@ public static void index() {
  public static void logicAND() {
      relationExpr();
      while (token.type.name().equals("andTK")) {
-         token = next(); // consume AND
+         token = next(); 
          relationExpr();
      }
  }
@@ -401,51 +387,58 @@ public static void relationExpr() {
         token.type.name().equals("gtTK") ||
         token.type.name().equals("lteTK") ||
         token.type.name().equals("gteTK")) {
-        token = next(); // consume relational operator
+        relationOperator(); 
         additiveExpr();
     }
 }
 
 
 // //-------------------------------------------------------------------
-// // additiveExpr = term ((PLUS | MINUS) term)*
+// // additiveExpr = term (addingOperator term)*
 // //------------------------------------------------------------------- 
  public static void additiveExpr() {
      term();
-     while (token.type.name().equals("plusTK") || token.type.name().equals("minusTK")) {
-         token = next(); // consume PLUS or MINUS
+     while (token.type.name().equals("plusTK") 
+             || token.type.name().equals("minusTK")
+             || token.type.name().equals("concatTK"))
+     {
+         addingOperator();
          term();
      }
  }
 
 // //-------------------------------------------------------------------
-// // factor =	lvalue | constant | LPAREN expr RPAREN
+// // factor =	(NOT)?lvalue | constant | LPAREN expr RPAREN
 // //------------------------------------------------------------------- 
- public static void factor() {
-     switch (token.type.name()) {
-         case "identifierTK":
-             lvalue();
-             break;
-         case "numericTK":
-         case "stringConstTK":
-         case "trueTK":
-         case "falseTK":
-             constant();
-             break;
-         case "lparenTK":
-             token = next(); // consume LPAREN
-             expr();
-             if (token.type.name().equals("rparenTK")) {
-                 token = next(); // consume RPAREN
-             } else {
-                 error("Missing closing parenthesis");
-             }
-             break;
-         default:
-             error("Invalid factor");
-             break;
-     }
- }
+public static void factor() {
+    switch (token.type.name()) {
+        case "notTK":
+            token = next();
+            lvalue();
+            break;
+        case "numericTK":
+        case "stringConstTK":
+        case "trueTK":
+        case "falseTK":
+        case "minusTK":
+            constant();
+            break;
+        case "lparenTK":
+            token = next();
+            expr();
+            if (token.type.name().equals("rparenTK")) {
+                token = next();
+            } else {
+                error("RPAREN Expected");
+            }
+            break;
+        default:
+            lvalue();
+            break;
+    }
+}
+
+
 
 // //-------------------------------------------------------------------
 // // term = factor ((TIMES | DIVISION | MODULO) factor)*
@@ -483,7 +476,7 @@ public static void constant() {
            }
            break;
        default:
-           error("Invalid constant");
+           error("Expected a valid constant");
            break;
    }
 }
