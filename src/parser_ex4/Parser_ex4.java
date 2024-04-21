@@ -72,7 +72,7 @@ public class Parser_ex4 {
     }
 
     //-------------------------------------------------------------------
-    // decl = idList COLON type --EAP   X,A,Y:INTEGER
+    // decl = idList COLON type --EAP  
     //------------------------------------------------------------------- 
     public static void decl() {
         idList();
@@ -85,7 +85,7 @@ public class Parser_ex4 {
     }
 
     //-------------------------------------------------------------------
-    // idList =	ID (COMMA ID)*  -CHECKED    x,y,a
+    // idList =	ID (COMMA ID)*     
     //------------------------------------------------------------------- 
     public static void idList() {
         if(token.type.name().equals("identifierTK")){
@@ -408,14 +408,11 @@ public static void relationExpr() {
  }
 
 // //-------------------------------------------------------------------
-// // factor =	(NOT)?lvalue | constant | LPAREN expr RPAREN
+// // factor =	  Constant | LPAREN expr RPAREN | (NOT)?lvalue
 // //------------------------------------------------------------------- 
 public static void factor() {
     switch (token.type.name()) {
-        case "notTK":
-            token = next();
-            lvalue();
-            break;
+       
         case "numericTK":
         case "stringConstTK":
         case "trueTK":
@@ -432,6 +429,10 @@ public static void factor() {
                 error("RPAREN Expected");
             }
             break;
+         case "notTK":
+            token = next();
+            lvalue();
+            break;
         default:
             lvalue();
             break;
@@ -441,12 +442,12 @@ public static void factor() {
 
 
 // //-------------------------------------------------------------------
-// // term = factor ((TIMES | DIVISION | MODULO) factor)*
+// // term = factor (multiplyOperator factor)*
 // //------------------------------------------------------------------- 
  public static void term() {
      factor();
      while (token.type.name().equals("timesTK") || token.type.name().equals("divisionTK") || token.type.name().equals("moduloTK")) {
-         token = next(); // consume TIMES, DIVISION, or MODULO
+         multiplyOperator();
          factor();
      }
  }
@@ -521,7 +522,7 @@ public static void addingOperator() {
            token = next(); 
            break;
        default:
-           error("Invalid adding operator");
+           error("Invalid addingOperator");
            break;
    }
 }
@@ -536,7 +537,7 @@ public static void multiplyOperator() {
        case "timesTK":
        case "divisionTK":
        case "moduloTK":
-           token = next(); // consume the  operator
+           token = next(); 
            break;
        default:
            error("Invalid multiply operator");
@@ -548,9 +549,9 @@ public static void multiplyOperator() {
     public static void main(String args[]) {
 
         // path to the input file
-        Lex lex = new Lex("./test/sample5.spl");
+        Lex lex = new Lex("./test/sample1.spl");
         tokens = lex.getTokens();
-        System.out.println(tokens);
+       
         token = next();
        
         program();
