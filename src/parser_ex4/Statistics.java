@@ -52,24 +52,24 @@ public class Statistics {
 
     //Μεθοδος για την προβολη των στατιστικων .
     public void displayStatistics() {
-        System.out.println("+".repeat(20));
-        System.out.println("Statistics:");
+        System.out.println(""));
+        System.out.println("Program Statistics:");
         System.out.println(variables);
-        System.out.println("Total Variables:" + variables.size());
+        System.out.println("Total Variables Declared:" + variables.size());
         System.out.println("Variables by Type: ");
         for (String type : Set.of("INTEGER", "STRING", "BOOLEAN")) {
             int count = (int) variables.values().stream().filter(t -> t.equals(type)).count();
             System.out.println(TYPE + ": " + count);
         }
-        System.out.println("Undeclared Variables : "+ undeclaredVars);
+        System.out.println("Undeclared Variables Used: "+ undeclaredVars);
         
-        System.out.println("Total Statements:" + statements.size());
+        System.out.println("Total Statements Defined:" + statements.size());
         System.out.println("Statements by Type: ");
         for (String type : Set.of("BEGIN-END", "ASSIGNMENT", "IF-THEN", "IF-THEN-ELSE", "READ", "WHILE-DO", "EXIT", "WRITE")) {
             int count = (int) statements.values().stream().filter(t -> t.equals(type)).count();
             System.out.println(type + "=" + count);
         }
-        System.out.println("Total Expressions :" + expressions.size());
+        System.out.println("Total Expressions Defined:" + expressions.size());
         System.out.println("Expressions by Type: ");
         for (String type : Set.of("RELATIONAL", "MULTIPLICATIVE", "ADDITIVE", "CONSTANT", "LOGICAL")) {
             int count = (int) expressions.values().stream().filter(t -> t.equals(type)).count();
