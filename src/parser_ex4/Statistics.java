@@ -33,7 +33,7 @@ public class Statistics {
     }
 
     //Μεθοδος για την ενημερωση μεταβλητων.
-    public void updateVariables(String type) {
+    public void updateVars(String type) {
         for (Map.Entry<String, String> entry : variables.entrySet()) {
             if (entry.getValue().equals("identifierTK")) {
                 variables.put(entry.getKey(), type);
