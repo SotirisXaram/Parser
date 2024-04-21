@@ -73,7 +73,7 @@ public class Statistics {
         System.out.println("Expressions by Type: ");
         for (String type : Set.of("RELATIONAL", "MULTIPLICATIVE", "ADDITIVE", "CONSTANT", "LOGICAL")) {
             int count = (int) expressions.values().stream().filter(t -> t.equals(type)).count();
-            System.out.println(type + "=" + count);
+            System.out.println(type + ":" + count);
         }
     }
 }
