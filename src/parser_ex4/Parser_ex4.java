@@ -7,19 +7,23 @@ public class Parser_ex4 {
     static ArrayList<Token> tokens;
     static Token token;
 
-    // Retrieves the next token
+   
     private static Token next() {
         token = tokens.remove(0);
         return token;
     }
 
-    // Displays error message and exits
+  
     public static void error(String s) {
         System.out.format("error in line %d: %s\n", token.line, s);
         System.exit(0);
     }
 
-    // program = PROGRAM ID declarations BODY statement EOF
+ //-------------------------------------------------------------------
+//  program = PROGRAM ID declarations BODY statement EOF
+//-------------------------------------------------------------------
+
+
     public static void program() {
         if(token.type.name().equals("programTK")){
             token = next();
@@ -48,7 +52,10 @@ public class Parser_ex4 {
         }
     }
 
-    // declarations = VAR decl (SEMICOLON decl)* | ε
+//-------------------------------------------------------------------
+//  declarations = VAR decl (SEMICOLON decl)* | ε
+//-------------------------------------------------------------------
+
     public static void declarations() {
         if(token.type.name().equals("varTK")){
             token = next();
@@ -61,7 +68,12 @@ public class Parser_ex4 {
         }
     }
 
-    // decl = idList COLON type --EAP
+  //-------------------------------------------------------------------
+//  decl = idList COLON type –EAP
+//-------------------------------------------------------------------
+
+
+
     public static void decl() {
         idList();
         if (token.type.name().equals("colonTK")) {
@@ -72,7 +84,10 @@ public class Parser_ex4 {
         }
     }
 
-    // idList = ID (COMMA ID)*
+   //-------------------------------------------------------------------
+// 4. idList = ID (COMMA ID)*
+//-------------------------------------------------------------------
+
     public static void idList() {
         if(token.type.name().equals("identifierTK")){
 
@@ -93,7 +108,10 @@ public class Parser_ex4 {
         }
     }
 
-    // type = basicType | arrayType
+   //-------------------------------------------------------------------
+//  type = basicType | arrayType
+//-------------------------------------------------------------------
+
     public static void type() {
         if (token.type.name().equals("integerTK") ||
             token.type.name().equals("booleanTK") ||
@@ -106,7 +124,10 @@ public class Parser_ex4 {
         }
     }
 
-    // basicType = INTEGER | BOOLEAN | STRING
+   //-------------------------------------------------------------------
+//  basicType = INTEGER | BOOLEAN |STRING
+//-------------------------------------------------------------------
+
     public static void basicType() {
         if (token.type.name().equals("integerTK")) {
             token = next();
@@ -119,7 +140,10 @@ public class Parser_ex4 {
         }
     }
 
-    // arrayType = ARRAY LBRACK NUMERIC RBRACK OF basicType
+   //-------------------------------------------------------------------
+//  arrayType = ARRAY LBRACK NUMERIC RBRACK OF basicType
+//-------------------------------------------------------------------
+
     public static void arrayType() {
         if (token.type.name().equals("arrayTK")) {
             token = next();
@@ -149,9 +173,17 @@ public class Parser_ex4 {
         }
     }
 
-    // statement = BEGIN block END | lvalue ASSIGN expr | READ LPAREN idList RPAREN |
-    //             WRITE LPAREN exprList RPAREN | IF expr THEN statement (ELSE statement)? |
-    //             WHILE expr DO statement | EXIT
+
+ //-------------------------------------------------------------------
+//  statement = BEGIN block END
+// | lvalue ASSIGN expr
+// | READ LPAREN idList RPAREN
+// | WRITE LPAREN exprList RPAREN
+// | IF expr THEN statement (ELSE statement)?
+// | WHILE expr DO statement
+// | EXIT
+//-------------------------------------------------------------------
+
     public static void statement() {
         if (token.type.name().equals("beginTK")) {
             token = next();
@@ -222,7 +254,10 @@ public class Parser_ex4 {
         }
     }
 
-    // block = statement (SEMICOLON statement)* | ε
+ //-------------------------------------------------------------------
+//  block = statement (SEMICOLON statement)* | ε
+//-------------------------------------------------------------------
+
     public static void block() {
         statement();
         while(token.type.name().equals("semicolonTK")){
@@ -231,7 +266,10 @@ public class Parser_ex4 {
         }
     }
 
-    // lvalue = ID args
+  //-------------------------------------------------------------------
+//  lvalue = ID args
+//-------------------------------------------------------------------
+
     public static void lvalue() {
         if (token.type.name().equals("identifierTK")) {
             token = next();
@@ -241,7 +279,10 @@ public class Parser_ex4 {
         }
     }
 
-    // args = LBRACK index RBRACK | ε
+//-------------------------------------------------------------------
+//  args = LBRACK index RBRACK | ε
+//-------------------------------------------------------------------
+
     public static void args() {
         if (token.type.name().equals("lbrackTK")) {
             token = next();
@@ -254,7 +295,10 @@ public class Parser_ex4 {
         }
     }
 
-    // index = ID | NUMERIC
+  //-------------------------------------------------------------------
+//  index = ID | NUMERIC
+//-------------------------------------------------------------------
+
     public static void index() {
         if (token.type.name().equals("identifierTK") || token.type.name().equals("numericTK")) {
             token = next();
@@ -263,7 +307,10 @@ public class Parser_ex4 {
         }
     }
 
-    // exprList = expr (COMMA expr)*
+  //-------------------------------------------------------------------
+//  exprList = expr (COMMA expr)*
+//-------------------------------------------------------------------
+
     public static void exprList() {
         expr();
         while (token.type.name().equals("commaTK")) {
@@ -271,9 +318,14 @@ public class Parser_ex4 {
             expr();
         }
     }
+ 
 
-    // expr = logicAND (OR logicAND)*
-    public static void expr() {
+//-------------------------------------------------------------------
+//  expr = logicAND (OR logicAND)*
+//-------------------------------------------------------------------
+
+
+   public static void expr() {
         logicAND();
         while (token.type.name().equals("orTK")) {
             token = next();
@@ -281,7 +333,10 @@ public class Parser_ex4 {
         }
     }
 
-    // logicAND = relationExpr (AND relationExpr)*
+  //-------------------------------------------------------------------
+//  logicAND = relationExpr (AND relationExpr)*
+//-------------------------------------------------------------------
+
     public static void logicAND() {
         relationExpr();
         while (token.type.name().equals("andTK")) {
@@ -290,7 +345,10 @@ public class Parser_ex4 {
         }
     }
 
-    // relationExpr = additiveExpr (relationOperator additiveExpr)?
+ //-------------------------------------------------------------------
+//  relationExpr = additiveExpr (relationOperator additiveExpr)?
+//-------------------------------------------------------------------
+
     public static void relationExpr() {
         additiveExpr();
         if (token.type.name().equals("equalTK") ||
@@ -304,8 +362,10 @@ public class Parser_ex4 {
         }
     }
 
-    // additiveExpr = term (addingOperator term)*
-    public static void additiveExpr() {
+//-------------------------------------------------------------------
+//  additiveExpr = term (addingOperator term)*
+//-------------------------------------------------------------------
+     public static void additiveExpr() {
         term();
         while (token.type.name().equals("plusTK") || token.type.name().equals("minusTK") || token.type.name().equals("concatTK")) {
             addingOperator();
@@ -313,7 +373,10 @@ public class Parser_ex4 {
         }
     }
 
-    // factor = Constant | LPAREN expr RPAREN | (NOT)?lvalue
+ //-------------------------------------------------------------------
+//  factor = constant | LPAREN expr RPAREN | (NOT)? lvalue
+//-------------------------------------------------------------------
+
     public static void factor() {
         if (token.type.name().equals("numericTK") ||
             token.type.name().equals("stringConstTK") ||
@@ -337,7 +400,10 @@ public class Parser_ex4 {
         }
     }
 
-    // term = factor (multiplyOperator factor)*
+  //-------------------------------------------------------------------
+//  term = factor (multiplyOperator factor)*
+//-------------------------------------------------------------------
+
     public static void term() {
         factor();
         while (token.type.name().equals("timesTK") || token.type.name().equals("divisionTK") || token.type.name().equals("moduloTK")) {
@@ -346,7 +412,14 @@ public class Parser_ex4 {
         }
     }
 
-    // constant = NUMERIC | STRING | TRUE | FALSE | MINUS NUMERIC
+//-------------------------------------------------------------------
+// constant = NUMERIC
+// | STRING
+// | TRUE
+// | FALSE
+// | MINUS NUMERIC
+//-------------------------------------------------------------------
+
     public static void constant() {
         if (token.type.name().equals("numericTK") ||
             token.type.name().equals("stringConstTK") ||
@@ -365,7 +438,15 @@ public class Parser_ex4 {
         }
     }
 
-    // relationOperator = EQUAL | NOT_EQUAL | LT | GT | LTE | GTE
+ //-------------------------------------------------------------------
+//  relationOperator = EQUAL
+// | NOT_EQUAL
+// | LT
+// | GT
+// | LTE
+// | GTE
+//-------------------------------------------------------------------
+
     public static void relationOperator() {
         if (token.type.name().equals("equalTK") ||
             token.type.name().equals("notEqualTK") ||
@@ -379,7 +460,12 @@ public class Parser_ex4 {
         }
     }
 
-    // addingOperator = PLUS | MINUS | CONCAT
+  //-------------------------------------------------------------------
+//  addingOperator = PLUS
+// | MINUS
+// | CONCAT
+//-------------------------------------------------------------------
+
     public static void addingOperator() {
         if (token.type.name().equals("plusTK") ||
             token.type.name().equals("minusTK") ||
@@ -390,7 +476,12 @@ public class Parser_ex4 {
         }
     }
 
-    // multiplyOperator = TIMES | DIVISION | MODULO
+ //-------------------------------------------------------------------
+//  multiplyOperator = TIMES
+// | DIVISION
+// | MODULO
+//-------------------------------------------------------------------
+
     public static void multiplyOperator() {
         if (token.type.name().equals("timesTK") ||
             token.type.name().equals("divisionTK") ||
@@ -408,3 +499,4 @@ public class Parser_ex4 {
         program();
     }
 }
+
