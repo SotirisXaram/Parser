@@ -42,7 +42,7 @@ public class Statistics {
     }
 
     //Μεθοδος για την προσθηκη undeclared μεταβλητων
-    public void addUndeclaredVariable(String name, String line) {
+    public void addUndeclaredVars(String name, String line) {
         if (!variables.containsKey(name) && !undeclaredVars.contains(name + " line " + line)) {
             undeclaredVars.add(name + " line " + line);
         }
