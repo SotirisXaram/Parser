@@ -1,9 +1,13 @@
 package parser_ex4;
-
+/**
+ *
+ * @author sotirisxaram eap
+ */
 import java.util.ArrayList;
 
 public class Parser_ex4 {
 
+    static Statistics statistics = new Statistics();
     static ArrayList<Token> tokens;
     static Token token;
 
@@ -36,7 +40,7 @@ public class Parser_ex4 {
                     if(token.type.name().equals("eofTK")){
                         System.out.println("Syntactically correct program");
                     }else{
-                        System.out.println("EOF expected");
+                        error("EOF expected");
                     }
 
                 }else{
@@ -89,13 +93,17 @@ public class Parser_ex4 {
 //-------------------------------------------------------------------
 
     public static void idList() {
+        
         if(token.type.name().equals("identifierTK")){
-
+            
+            statistics.addVariable(token.data.toString(), token.type.toString());
+            
             token = next();
 
             while(token.type.name().equals("commaTK")){
                 token = next();
                 if(token.type.name().equals("identifierTK")){
+                    statistics.addVariable(token.data.toString(), token.type.toString());
                     token = next();
 
                 }else{
@@ -129,6 +137,7 @@ public class Parser_ex4 {
 //-------------------------------------------------------------------
 
     public static void basicType() {
+        statistics.updateVars(token.data.toString());
         if (token.type.name().equals("integerTK")) {
             token = next();
         } else if (token.type.name().equals("booleanTK")) {
@@ -186,6 +195,7 @@ public class Parser_ex4 {
 
     public static void statement() {
         if (token.type.name().equals("beginTK")) {
+            statistics.addStatement(token.data.toString()+token.line, "BEGIN-END");
             token = next();
             block();
             if (token.type.name().equals("endTK")) {
@@ -196,12 +206,14 @@ public class Parser_ex4 {
         } else if (token.type.name().equals("identifierTK")) {
             lvalue();
             if (token.type.name().equals("assignTK")) {
+                statistics.addStatement(token.data.toString()+token.line, "ASSIGNMENT");
                 token = next();
                 expr();
             } else {
                 error("Assignment operator expected after lvalue");
             }
         } else if (token.type.name().equals("readTK")) {
+            statistics.addStatement(token.data.toString()+token.line, "READ");
             token = next();
             if (token.type.name().equals("lparenTK")) {
                 token = next();
@@ -215,6 +227,7 @@ public class Parser_ex4 {
                 error(" ( expected after READ");
             }
         } else if (token.type.name().equals("writeTK")) {
+            statistics.addStatement(token.data.toString()+token.line, "WRITE");
             token = next();
             if (token.type.name().equals("lparenTK")) {
                 token = next();
@@ -228,12 +241,14 @@ public class Parser_ex4 {
                 error(" ( expected after WRITE");
             }
         } else if (token.type.name().equals("ifTK")) {
+            statistics.addStatement(token.data.toString()+token.line, "IF-THEN");
             token = next();
             expr();
             if (token.type.name().equals("thenTK")) {
                 token = next();
                 statement();
                 if (token.type.name().equals("elseTK")) {
+                    statistics.addStatement(token.data.toString()+token.line, "IF-THEN-ELSE");
                     token = next();
                     statement();
                 }
@@ -241,6 +256,7 @@ public class Parser_ex4 {
                 error("THEN keyword expected after IF expression");
             }
         } else if (token.type.name().equals("whileTK")) {
+            statistics.addStatement(token.data.toString()+token.line, "WHILE-DO");
             token = next();
             expr();
             if (token.type.name().equals("doTK")) {
@@ -250,6 +266,7 @@ public class Parser_ex4 {
                 error("DO keyword expected after WHILE expression");
             }
         } else if (token.type.name().equals("exitTK")) {
+            statistics.addStatement(token.data.toString()+token.line, "EXIT");
             token = next();
         }
     }
@@ -272,6 +289,7 @@ public class Parser_ex4 {
 
     public static void lvalue() {
         if (token.type.name().equals("identifierTK")) {
+            statistics.addUndeclaredVars(token.data.toString(), String.valueOf(token.line));
             token = next();
             args();
         } else {
@@ -328,6 +346,7 @@ public class Parser_ex4 {
    public static void expr() {
         logicAND();
         while (token.type.name().equals("orTK")) {
+            statistics.addExpression(token.data.toString()+token.line, "LOGICAL");
             token = next();
             logicAND();
         }
@@ -340,6 +359,7 @@ public class Parser_ex4 {
     public static void logicAND() {
         relationExpr();
         while (token.type.name().equals("andTK")) {
+            statistics.addExpression(token.data.toString()+token.line, "LOGICAL");
             token = next();
             relationExpr();
         }
@@ -357,6 +377,7 @@ public class Parser_ex4 {
             token.type.name().equals("gtTK") ||
             token.type.name().equals("lteTK") ||
             token.type.name().equals("gteTK")) {
+            statistics.addExpression(token.data.toString()+token.line, "RELATIONAL");
             relationOperator();
             additiveExpr();
         }
@@ -368,6 +389,7 @@ public class Parser_ex4 {
      public static void additiveExpr() {
         term();
         while (token.type.name().equals("plusTK") || token.type.name().equals("minusTK") || token.type.name().equals("concatTK")) {
+           statistics.addExpression(token.data.toString()+token.line, "ADDITIVE");
             addingOperator();
             term();
         }
@@ -383,6 +405,7 @@ public class Parser_ex4 {
             token.type.name().equals("trueTK") ||
             token.type.name().equals("falseTK") ||
             token.type.name().equals("minusTK")) {
+            statistics.addExpression(token.data.toString()+token.line, "CONSTANT");
             constant();
         } else if (token.type.name().equals("lparenTK")) {
             token = next();
@@ -393,6 +416,7 @@ public class Parser_ex4 {
                 error("RPAREN Expected");
             }
         } else if (token.type.name().equals("notTK")) {
+            statistics.addExpression(token.data.toString()+token.line, "LOGICAL");
             token = next();
             lvalue();
         } else {
@@ -407,6 +431,7 @@ public class Parser_ex4 {
     public static void term() {
         factor();
         while (token.type.name().equals("timesTK") || token.type.name().equals("divisionTK") || token.type.name().equals("moduloTK")) {
+            statistics.addExpression(token.data.toString()+token.line, "MULTIPLICATIVE");
             multiplyOperator();
             factor();
         }
@@ -493,10 +518,10 @@ public class Parser_ex4 {
     }
 
     public static void main(String args[]) {
-        Lex lex = new Lex("./test/sample1.spl");
+        Lex lex = new Lex("./test/sample5.spl");
         tokens = lex.getTokens();
         token = next();
         program();
+        statistics.display();
     }
 }
-
