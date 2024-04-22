@@ -35,3 +35,6 @@ git clone https://github.com/SotirisXaram/Parser.git
 ## Sample Codes
 
 Sample SPL programs are provided in the `test` directory. These programs serve as examples for testing the functionality of the SPL Language Lexical Parser and Syntactic Parser. You can use these samples to verify the correctness of the parsers and understand how SPL programs are structured.
+ 
+(educational purpose)
+       
