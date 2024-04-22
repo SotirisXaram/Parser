@@ -1,5 +1,8 @@
 package parser_ex4;
-
+/**
+ *
+ * @author sotirisxaram
+ */
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -43,37 +46,52 @@ public class Statistics {
 
     //Μεθοδος για την προσθηκη undeclared μεταβλητων
     public void addUndeclaredVars(String name, String line) {
-        if (!variables.containsKey(name) && !undeclaredVars.contains(name + " line " + line)) {
-            undeclaredVars.add(name + " line " + line);
+        if (!variables.containsKey(name) && !undeclaredVars.contains(name + " at line " + line)) {
+            undeclaredVars.add(name + " at line " + line);
         }
     }
 
   
 
     //Μεθοδος για την προβολη των στατιστικων .
-    public void displayStatistics() {
-        System.out.println(""));
+    
+    public void display() {
+        System.out.println();
         System.out.println("Program Statistics:");
-        System.out.println(variables);
+        
         System.out.println("Total Variables Declared:" + variables.size());
-        System.out.println("Variables by Type: ");
+        System.out.print("Variables by Type: ");
+        System.out.print("{");
         for (String type : Set.of("INTEGER", "STRING", "BOOLEAN")) {
             int count = (int) variables.values().stream().filter(t -> t.equals(type)).count();
-            System.out.println(TYPE + ": " + count);
+            if(count>0){
+                System.out.print(type + "= " + count+" ");
+            }
+            
         }
+        System.out.println("}");
         System.out.println("Undeclared Variables Used: "+ undeclaredVars);
         
         System.out.println("Total Statements Defined:" + statements.size());
-        System.out.println("Statements by Type: ");
+        System.out.print("Statements by Type: ");
+        System.out.print("{");
         for (String type : Set.of("BEGIN-END", "ASSIGNMENT", "IF-THEN", "IF-THEN-ELSE", "READ", "WHILE-DO", "EXIT", "WRITE")) {
             int count = (int) statements.values().stream().filter(t -> t.equals(type)).count();
-            System.out.println(type + "=" + count);
+            System.out.print(type + "=" + count+", ");
         }
+        System.out.println("}");
         System.out.println("Total Expressions Defined:" + expressions.size());
-        System.out.println("Expressions by Type: ");
+        System.out.print("Expressions by Type: ");
+        System.out.print("{");
         for (String type : Set.of("RELATIONAL", "MULTIPLICATIVE", "ADDITIVE", "CONSTANT", "LOGICAL")) {
             int count = (int) expressions.values().stream().filter(t -> t.equals(type)).count();
-            System.out.println(type + ":" + count);
+           if(count>0){
+               System.out.print(type + "=" + count+" ");
+           }
+            
         }
+        System.out.println("}");
     }
 }
+
+
